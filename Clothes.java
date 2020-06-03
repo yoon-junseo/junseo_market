@@ -300,6 +300,12 @@ public class Clothes extends Setting implements Items{
 			pw.close();
 			seller.setCount();
 			
+			fileName = "C:/Java_Lab/Project/src/market/user/" + sellerPhone + "tradeCount.txt";
+			bw = new BufferedWriter(new FileWriter(fileName, false));
+			pw = new PrintWriter(bw, true);
+			pw.println("°Å·¡È½¼ö: " + seller.getCount());
+			pw.close();
+			
 			fileName = "C:/Java_Lab/Project/src/market/user/" + buyer.getPhoneNumber() + "purchasedList.txt";
 			bw = new BufferedWriter(new FileWriter(fileName, true));
 			pw = new PrintWriter(bw, true);
@@ -310,7 +316,13 @@ public class Clothes extends Setting implements Items{
 			pw.println("========================================================================================================");
 			pw.close();
 			buyer.setCount();
-
+			
+			fileName = "C:/Java_Lab/Project/src/market/user/" + buyer.getPhoneNumber() + "tradeCount.txt";
+			bw = new BufferedWriter(new FileWriter(fileName, false));
+			pw = new PrintWriter(bw, true);
+			pw.println("°Å·¡È½¼ö: " + seller.getCount());
+			pw.close();
+			
 		}
 
 

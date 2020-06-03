@@ -97,6 +97,9 @@ public class User {
 	public void setCount() {
 		this.count++;
 	}
+	public int getCount() {
+		return count;
+	}
 	public String getPassword() {
 		return map.get(phoneNumber);
 	}
@@ -162,6 +165,11 @@ public class User {
 					System.out.println("지역: " + this.region);
 					System.out.println("관심분야: " + categoryList.get(0));
 					br.close();
+					
+					fileName = "C:/Java_Lab/Project/src/market/user/" + this.phoneNumber + "tradeCount.txt";
+					br = new BufferedReader(new FileReader(fileName));
+					check = br.readLine();
+					this.count = Integer.parseInt(check.substring(6));
 					return true;
 				}
 				else {
@@ -181,6 +189,11 @@ public class User {
 	}
 	
 	public boolean signUp() throws IOException {
+		BufferedReader br = null;
+		BufferedWriter bw = null;
+		PrintWriter pw = null;
+		String fileName = null;
+		
 		System.out.print("전화번호 입력 >> ");
 		this.phoneNumber = sc.next();
 		System.out.print("비밀번호 입력 >> ");
@@ -218,8 +231,8 @@ public class User {
 		}
 		
 		int cnt = 0;
-		String fileName = "C:/Java_Lab/Project/src/market/user/user.txt";
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		fileName = "C:/Java_Lab/Project/src/market/user/user.txt";
+		br = new BufferedReader(new FileReader(fileName));
 		String checkPhoneNumber;
 		while((checkPhoneNumber = br.readLine()) != null) {
 			if(checkPhoneNumber.substring(0, 6).equals("전화번호: ")) {
@@ -233,16 +246,24 @@ public class User {
 		}
 		br.close();
 		
+		if(cnt == 0) { // 회원가입시 거래횟수 파일 만들어주기
+			fileName = "C:/Java_Lab/Project/src/market/user/" + this.phoneNumber + "tradeCount.txt";
+			bw = new BufferedWriter(new FileWriter(fileName, true));
+			pw = new PrintWriter(bw, true);
+			pw.println("거래횟수: " + this.count);
+			pw.close();
+		}
+		
 		if(cnt == 0) {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(fileName, true));
-			PrintWriter fw = new PrintWriter(bw, true);
-			
-			fw.println("전화번호: " + this.phoneNumber + " 비밀번호: " + this.password + " 지역: " + this.region + " 관심목록: " + this.category);
+			fileName = "C:/Java_Lab/Project/src/market/user/user.txt";
+			bw = new BufferedWriter(new FileWriter(fileName, true));
+			pw = new PrintWriter(bw, true);
+			pw.println("전화번호: " + this.phoneNumber + " 비밀번호: " + this.password + " 지역: " + this.region + " 관심목록: " + this.category);
 			//fw.println("비밀번호: " + this.password);
-			fw.println("========================================================================================================");
+			pw.println("========================================================================================================");
 			map.put(this.phoneNumber, this.password);
 			System.out.println("회원가입이 완료되었습니다.");
-			fw.close();
+			pw.close();
 			return true;
 		}
 		return true;
@@ -376,7 +397,16 @@ public class User {
 		}
 	}
 	
-	public void showInfo() {
+	public void showInfo() throws IOException {
+		BufferedReader br = null;
+		String fileName = null;
+		String readBuffer = null;
+		
+		fileName = "C:/Java_Lab/Project/src/market/user/" + this.phoneNumber + "tradeCount.txt";
+		br = new BufferedReader(new FileReader(fileName));
+		readBuffer = br.readLine().substring(6);
+		this.count = Integer.parseInt(readBuffer);
+		br.close();
 		System.out.println("전화번호: " + this.phoneNumber);
 		System.out.println("지역: " + this.region);
 		System.out.println("관심 카테고리: " + categoryList.get(0));
@@ -415,7 +445,6 @@ public class User {
 		}
 		else if(number % 2 == 0) {
 			number = r.nextInt(tokens.size());
-			System.out.println(number);
 			if(tokens.get(number).equals("전자기기")) {
 				item = new Electronics();
 				item.showItems();
